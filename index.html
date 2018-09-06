@@ -23,14 +23,30 @@
         header {
             width: 100vw;
             height: 40vh;
+            overflow-x: scroll;
+            overflow-y: hidden;
+            -webkit-overflow-scrolling: touch;
             background: #218a6f;
+        }
+
+        header section {
+            height: 100%;
+            display: flex;
+        }
+
+        header div {
+            flex-shrink: 0;
+            margin: 1vh;
+            width: calc(50vw - 2vh);
+            height: calc(100% - 2vh);
+            background: #fff8;
         }
 
         footer {
             height: 60vh;
         }
 
-        section {
+        footer section {
             height: 80%;
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
@@ -79,7 +95,11 @@
 <body>
     <main>
         <header>
-
+            <section>
+                <div></div>
+                <div></div>
+                <div></div>
+            </section>
         </header>
         <footer>
             <section>
