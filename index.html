@@ -27,16 +27,17 @@
 
         footer {
             height: 60vh;
-            overflow-x: hidden;
-            overflow-y: scroll;
-            background: #efc137;
         }
 
         section {
+            height: 50%;
             display: flex;
             flex-direction: column;
             align-content: center;
             justify-content: center;
+            overflow-x: hidden;
+            overflow-y: scroll;
+            background: #efc137;
         }
 
         footer ol {
@@ -58,6 +59,7 @@
         }
 
         button {
+            display: block;
             margin: auto;
             width: 5em;
             height: 2em;
@@ -82,8 +84,8 @@
                     <li>I'm out of town and can't make the meeting tomorrow. :(</li>
                     <li>Can anyone come in today to cover Sarah's shift? She had to call in sick.</li>
                 </ol>
-                <button>Submit</button>
             </section>
+            <button>Submit</button>
         </footer>
     </main>
 </body>
