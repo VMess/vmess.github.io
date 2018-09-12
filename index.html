@@ -22,6 +22,7 @@
             --bg-secondary: #148636;
             --fg-primary: #444;
             --fg-secondary: whitesmoke;
+            --fg-accent: #de3804;
             font-family: 'Lato', sans-serif;
             font-size: 120%;
         }
@@ -33,6 +34,8 @@
 
         article {
             margin: auto;
+            display: flex;
+            flex-wrap: wrap;
             width: 100vmin;
         }
 
@@ -73,6 +76,27 @@
         header form input:focus::placeholder {
             color: #fff2;
         }
+
+        main article div {
+            padding: 0 .75em;
+        }
+
+        main h1 {
+            color: var(--fg-accent);
+        }
+
+        main h4 {
+            line-height: .5em;
+            color: grey;
+        }
+
+        main h3 {
+            line-height: 0;
+        }
+
+        p {
+            line-height: .25em;
+        }
     </style>
 
     <script>
@@ -110,6 +134,7 @@
             animation.demonstrate();
         });
 
+/*
         const database = [
             {
                 name: 'Ira H. Rosenblum, DO',
@@ -118,7 +143,7 @@
                 address: `27005 76th Ave
 New Hyde Park, Queens, NY 11040`,
                 phone: '(718) 470-7000',
-            }, 
+            },
             {
                 name: 'Steinfeld, Philip S, MD',
                 category: 'Pediatrics',
@@ -136,9 +161,8 @@ New Hyde Park, NY 11040`,
                 phone: '(718) 470-7000',
             }
 
-
-
         ]
+*/
     </script>
 </head>
 
@@ -154,7 +178,30 @@ New Hyde Park, NY 11040`,
     </header>
     <main>
         <article>
-            <div></div>
+            <div>
+                <h1>Ira H. Rosenblum, DO</h1>
+                <h3>Internal Medicine</h3>
+                <h4>Rank: 5</h4>
+                <p>27005 76th Ave</p>
+                <p>New Hyde Park, NY 11040</p>
+                <p class="phone">(718) 470-7000</p>
+            </div>
+            <div>
+                <h1>Steinfeld, Philip S, MD</h1>
+                <h3>Pediatrics</h3>
+                <h4>Rank: 8</h4>
+                <p>26901 76th Ave</p>
+                <p>New Hyde Park, NY 11040</p>
+                <p class="phone">(718) 470-7000</p>
+            </div>
+            <div>
+                <h1>Kirtane, Smith S, MD</h1>
+                <h3>Internal Medicine</h3>
+                <h4>Rank: 7</h4>
+                <p>27005 76th Ave</p>
+                <p>New Hyde Park, NY 11040</p>
+                <p class="phone">(718) 470-7000</p>
+            </div>
         </article>
     </main>
     <footer>
