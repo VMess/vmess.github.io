@@ -17,32 +17,70 @@
         }
 
         body {
-            min-height: 100vh;
+            position: fixed;
+        }
+
+        main {
+            width: 100vw;
+            height: 100vh;
+            font-family: 'Lato', sans-serif;
             --bg-primary: whitesmoke;
-            --bg-secondary: #148636;
+            --bg-tertiary: #444;
             --fg-primary: #444;
             --fg-secondary: whitesmoke;
-            --fg-accent: #de3804;
-            font-family: 'Lato', sans-serif;
-            font-size: 120%;
+            --fg-tertiary: whitesmoke;
+            --fg-accent: #444;
+        }
+
+        main.physicians {
+            --bg-secondary: #148636;
+        }
+
+        main.institutions {
+            --bg-secondary: blue;
         }
 
         header {
             background: var(--bg-secondary);
             color: var(--fg-secondary);
+            font-size: 120%;
         }
 
-        article {
+        section {
             margin: auto;
             display: flex;
-            flex-wrap: wrap;
             width: 100vmin;
         }
 
-        header article {
+        header section {
             display: flex;
             align-items: baseline;
             justify-content: space-between;
+        }
+
+        header nav {
+            margin: .5em;
+            display: flex;
+            align-items: baseline;
+        }
+
+        header nav h2 {
+            margin: .25em;
+            font-size: 1.3rem;
+        }
+
+        header nav h2:hover {
+            color: #fff8;
+            cursor: pointer;
+        }
+
+        header nav h2:hover i.inactive {
+            color: var(--fg-secondary);
+            text-shadow: 0 0 1em white;
+        }
+
+        header nav i.inactive {
+            color: #fff4;
         }
 
         header form {
@@ -77,30 +115,204 @@
             color: #fff2;
         }
 
-        main article div {
-            padding: 0 .75em;
+        article section {
+            flex-wrap: wrap;
+            justify-content: space-between;
+            font-size: 80%;
         }
 
-        main h1 {
-            color: var(--fg-accent);
+        article div {
+            margin: .5% 0;
+            position: relative;
+            box-sizing: border-box;
+            width: 32.5%;
+            padding: .75em;
+            border: 1px solid var(--bg-secondary);
         }
 
-        main h4 {
-            line-height: .5em;
-            color: grey;
+        article div h1,
+        article div h2,
+        article div h3,
+        article div h4,
+        article div h5 {
+            margin: 0;
+            font-size: 1rem;
         }
 
-        main h3 {
-            line-height: 0;
+        article div h2,
+        article div h5 {
+            font-weight: normal;
+            line-height: 1em; 
         }
 
-        p {
-            line-height: .25em;
+        article div h2 {
+            margin-bottom: .5em;
+        }
+
+        article div h4,
+        article div h5 {
+            display: none;
+            font-size: .8rem;
+            font-weight: normal;
+        }
+
+        article div.details h4,
+        article div.details h5 {
+            margin: .25em 0;
+            display: block;
+            max-height: 0;
+            opacity: 0;
+            transition:
+                max-height .2s .3s,
+                opacity .3s;
+        }
+
+        article div.expand h4,
+        article div.expand h5 {
+            max-height: 4em;
+            opacity: 1;
+            transition:
+                max-height .5s,
+                opacity .3s .2s;
+        }
+
+        article div h3 {
+            position: absolute;
+            right: -4px;
+            bottom: -4px;
+            width: 1em;
+            height: 1em;
+            border-radius: 50%;
+            background: var(--bg-secondary);
+            font-size: 1.5rem;
+            color: var(--fg-secondary);
+            text-align: center;
+            line-height: 1em;
+        }
+
+        footer {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 3em;
+            background: var(--bg-tertiary);
+            color: var(--fg-tertiary);
+        }
+
+        footer section {
+            justify-content: center;
         }
     </style>
 
+    <script src="https://vuejs.org/js/vue.js"></script>
     <script>
         'use strict';
+        const physicians = [
+            {
+                name: 'Mary Rosenberg, DO',
+                category: 'Internal Medicine',
+                rank: 5,
+                address: `27005 76th Ave
+New Hyde Park, Queens, NY 11040`,
+                phone: '(718) 470-7000',
+            },
+            {
+                name: 'Stanley Frank, MD',
+                category: 'Pediatrics',
+                rank: 8,
+                address: `26901 76th Ave
+New Hyde Park, NY 11040`,
+                phone: '(718) 470-7000',
+            },
+            {
+                name: 'Kirtane, Yashodhara S, MD',
+                category: 'Internal Medicine, Allergy and Immunology',
+                rank: 7,
+                address: `27005 76th Ave
+New Hyde Park, NY 11040`,
+                phone: '(718) 470-7000',
+            },
+
+            {
+                name: 'Ira H. Rosenblum, DO',
+                category: 'Internal Medicine',
+                rank: 5,
+                address: `27005 76th Ave
+New Hyde Park, NY 11040`,
+                phone: '(718) 470-7000',
+            },
+            {
+                name: 'Steinfeld, Philip S, MD',
+                category: 'Pediatrics',
+                rank: 8,
+                address: `27005 76th Ave
+New Hyde Park, NY 11040`,
+                phone: '(718) 470-7000',
+            },
+            {
+                name: 'Kathryn, Smith S, MD',
+                category: 'Internal Medicine',
+                rank: 7,
+                address: `27005 76th Ave
+New Hyde Park, NY 11040`,
+                phone: '(718) 470-7000',
+
+            },
+            {
+                name: 'Gina A. Mache, DO',
+                category: 'Pediatrics',
+                rank: 5,
+                address: `27005 76th Ave
+New Hyde Park, NY 11040`,
+                phone: '(718) 470-7000',
+            },
+            {
+                name: 'David, R. Johnson, MD',
+                category: 'Pediatrics',
+                rank: 3,
+                address: `27005 76th Ave
+New Hyde Park, NY 11040`,
+                phone: '(718) 470-7000',
+            },
+            {
+                name: 'Donald, Jones, MD',
+                category: 'Cardiologist',
+                rank: 8,
+                address: `27005 76th Ave
+New Hyde Park, NY 11040`,
+                phone: '(718) 470-7000',
+            },
+            {
+                name: 'Mary Hart, MD',
+                category: 'Obstetrics and Gynecology',
+                rank: 7,
+                address: `27005 76th Ave
+New Hyde Park, NY 11040`,
+                phone: '(718) 470-7000',
+            },
+            {
+                name: 'Charles, Mock, MD',
+                category: 'Surgical Critical Care',
+                rank: 2,
+                address: `27005 76th Ave
+New Hyde Park, NY 11040`,
+                phone: '(718) 470-7000',
+            },
+            {
+                name: 'Robert L. Larson, MD',
+                category: 'Family Practice',
+                rank: 9,
+                address: `27005 76th Ave
+New Hyde Park, NY 11040`,
+                phone: '(718) 470-7000',
+            }
+        ];
+
+        const institutions = [
+
+        ];
+
         window.addEventListener('DOMContentLoaded', e => {
             const animation = {
                 active: true,
@@ -109,7 +321,6 @@
                     'Cardiologist in 55243',
                     'Florida Neurologists'
                 ],
-                omnibox: document.querySelector('header form input'),
                 delay: 100,
                 index: 0,
                 cursor: 0,
@@ -127,88 +338,107 @@
                         setTimeout(this.demonstrate.bind(this), (Math.random() * this.delay + this.delay / 2 + delay) | 0);
                     }
                 },
+                initialize(omnibox) {
+                    this.omnibox = omnibox;
+                    this.omnibox.addEventListener('focus', e => {
+                        this.active = false;
+                    });
+                    this.demonstrate();
+                }
             };
-            animation.omnibox.addEventListener('focus', e => {
-                animation.active = false;
+
+            Vue.component('physician', {
+                props: ['physician'],
+                data() {
+                    return {
+                        details: false,
+                    };
+                },
+                template: `
+            <div v-on:mouseenter="showDetails" v-on:mouseleave="hideDetails" v-on:mousecancel="hideDetails" v-bind:class="{details}">
+                <h1>{{ physician.name }}</h1>
+                <h2>{{ physician.category }}</h2>
+                <h3>{{ physician.rank }}</h3>
+                <h4 v-for="line in lines(physician.address)">{{ line }}</h4>
+                <h5><a href="tel:physician.phone">{{ physician.phone }}</a></h5>
+            </div>
+                `,
+                methods: {
+                    lines(addr) {
+                        return addr.split('\n');
+                    },
+                    showDetails() {
+                        const record = this.$el;
+                        record.classList.add('details');
+                        requestAnimationFrame(() => requestAnimationFrame(() => record.classList.add('expand')));
+                    },
+                    hideDetails() {
+                        const record = this.$el;
+                        record.classList.remove('expand');
+                        record.addEventListener('animationend', () => requestAnimationFrame(() => record.classList.remove('details')));
+                    }
+                }
             });
-            animation.demonstrate();
+
+            Vue.component('institution', {
+                template: '<button v-on:click="count++">You clicked me {{ count }} times.</button>'
+            });
+
+            new Vue({
+                el: 'main',
+                data() {
+                    return {
+                        datasets: {
+                            physicians,
+                            institutions,
+                        },
+                        database: 'physicians',
+                    };
+                },
+                mounted() {
+                    this.main = document.querySelector('main');
+                    this.main.className = this.database;
+                    animation.initialize(document.querySelector('header form input'));
+                },
+                methods: {
+                    toggleContext() {
+                        const current = this.database;
+                        this.database = Object.keys(this.datasets).filter(name => name != current).pop();
+                        document.querySelectorAll('header nav h2 i').forEach(node => node.classList.toggle('inactive'));
+                        this.main.className = this.database;
+                    }
+                }
+            });
         });
-
-/*
-        const database = [
-            {
-                name: 'Ira H. Rosenblum, DO',
-                category: 'Internal Medicine',
-                rank: 5,
-                address: `27005 76th Ave
-New Hyde Park, Queens, NY 11040`,
-                phone: '(718) 470-7000',
-            },
-            {
-                name: 'Steinfeld, Philip S, MD',
-                category: 'Pediatrics',
-                rank: 8,
-                address: `26901 76th Ave
-New Hyde Park, NY 11040`,
-                phone: '(718) 470-7000',
-            },
-            {
-                name: 'Kirtane, Yashodhara S, MD',
-                category: 'Internal Medicine, Allergy and Immunology',
-                rank: 7,
-                address: `27005 76th Ave
-New Hyde Park, NY 11040`,
-                phone: '(718) 470-7000',
-            }
-
-        ]
-*/
     </script>
 </head>
 
 <body>
-    <header>
-        <article>
-            <h1>Phynder</h1>
-            <form action="#">
-                <input type="text">
-                <button><i class="fas fa-search"></i></button>
-            </form>
-        </article>
-    </header>
     <main>
+        <header>
+            <section>
+                <h1>Phynder</h1>
+                <nav>
+                    <h2 v-on:click="toggleContext"><i class="inactive fa fa-hospital" aria-hidden="true"></i> <i
+                            class="fa fa-user" aria-hidden="true"></i></h2>
+                    <form action="#">
+                        <input type="text">
+                        <button><i class="fas fa-search"></i></button>
+                    </form>
+                </nav>
+            </section>
+        </header>
         <article>
-            <div>
-                <h1>Ira H. Rosenblum, DO</h1>
-                <h3>Internal Medicine</h3>
-                <h4>Rank: 5</h4>
-                <p>27005 76th Ave</p>
-                <p>New Hyde Park, NY 11040</p>
-                <p class="phone">(718) 470-7000</p>
-            </div>
-            <div>
-                <h1>Steinfeld, Philip S, MD</h1>
-                <h3>Pediatrics</h3>
-                <h4>Rank: 8</h4>
-                <p>26901 76th Ave</p>
-                <p>New Hyde Park, NY 11040</p>
-                <p class="phone">(718) 470-7000</p>
-            </div>
-            <div>
-                <h1>Kirtane, Smith S, MD</h1>
-                <h3>Internal Medicine</h3>
-                <h4>Rank: 7</h4>
-                <p>27005 76th Ave</p>
-                <p>New Hyde Park, NY 11040</p>
-                <p class="phone">(718) 470-7000</p>
-            </div>
+            <section>
+                <physician v-for="record in datasets[database]" v-bind:key="record.name" v-bind:physician="record"></physician>
+            </section>
         </article>
+        <footer>
+            <section>
+                <p>{{ datasets[database].length }} results</p>
+            </section>
+        </footer>
     </main>
-    <footer>
-        <article>
-
-        </article>
-    </footer>
 </body>
 
 </html>
