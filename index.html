@@ -154,6 +154,7 @@
             display: none;
             font-size: .8rem;
             font-weight: normal;
+           xtransition: max-height 1s;
         }
 
         article div.details h4,
@@ -208,6 +209,11 @@
     <script src="https://vuejs.org/js/vue.js"></script>
     <script>
         'use strict';
+        const mousePosition = {
+            x: 0,
+            y: 0,
+        };
+
         const physicians = [
             {
                 name: 'Mary Rosenberg, DO',
@@ -314,28 +320,28 @@ New Hyde Park, NY 11040`,
         ];
 
         window.addEventListener('DOMContentLoaded', e => {
-            const animation = {
+            const omniboxAnimation = {
                 active: true,
                 examples: [
-                    'Obstetricians in New York city',
+                    'Obstetricians in New York City',
                     'Cardiologist in 55243',
                     'Florida Neurologists'
                 ],
-                delay: 100,
+                keystrokeDelay: 100,
                 index: 0,
                 cursor: 0,
                 demonstrate() {
-                    let delay = 0;
+                    let exampleDelay = 0;
                     this.cursor += 1;
                     this.omnibox.setAttribute('placeholder', this.examples[this.index].slice(0, this.cursor));
                     if (this.active && this.cursor == this.examples[this.index].length) {
-                        delay = this.cursor * 20;
+                        exampleDelay = this.cursor * 20;
                         this.index += 1;
                         this.cursor = 0;
                     }
                     this.index %= this.examples.length;
                     if (this.cursor < this.examples[this.index].length) {
-                        setTimeout(this.demonstrate.bind(this), (Math.random() * this.delay + this.delay / 2 + delay) | 0);
+                        setTimeout(this.demonstrate.bind(this), (Math.random() * this.keystrokeDelay + this.keystrokeDelay / 2 + exampleDelay) | 0);
                     }
                 },
                 initialize(omnibox) {
@@ -355,27 +361,34 @@ New Hyde Park, NY 11040`,
                     };
                 },
                 template: `
-            <div v-on:mouseenter="showDetails" v-on:mouseleave="hideDetails" v-on:mousecancel="hideDetails" v-bind:class="{details}">
+            <div v-on:mouseenter="toggleDetails">
                 <h1>{{ physician.name }}</h1>
                 <h2>{{ physician.category }}</h2>
                 <h3>{{ physician.rank }}</h3>
-                <h4 v-for="line in lines(physician.address)">{{ line }}</h4>
+                <h4 v-for="line in breakIntoLines(physician.address)">{{ line }}</h4>
                 <h5><a href="tel:physician.phone">{{ physician.phone }}</a></h5>
             </div>
                 `,
                 methods: {
-                    lines(addr) {
-                        return addr.split('\n');
+                    breakIntoLines(strWithLineBreaks) {
+                        return strWithLineBreaks.split('\n');
                     },
-                    showDetails() {
-                        const record = this.$el;
-                        record.classList.add('details');
-                        requestAnimationFrame(() => requestAnimationFrame(() => record.classList.add('expand')));
-                    },
-                    hideDetails() {
-                        const record = this.$el;
-                        record.classList.remove('expand');
-                        record.addEventListener('animationend', () => requestAnimationFrame(() => record.classList.remove('details')));
+                    toggleDetails(e) {
+                        const card = this;
+                        if (card.details) {
+                            card.$el.classList.remove('expand');
+                            card.$el.addEventListener('animationend', () => requestAnimationFrame(() => card.$el.classList.remove('details')), {once: true});
+                            clearInterval(card.details);
+                            card.details = null;
+                        } else {
+                            card.$el.classList.add('details');
+                            requestAnimationFrame(() => requestAnimationFrame(() => card.$el.classList.add('expand')));
+
+                            card.details = setInterval(() => {
+                                const bBox = card.$el.getBoundingClientRect();
+                                (mousePosition.x > bBox.x && mousePosition.x < (bBox.x + bBox.width) && mousePosition.y > bBox.y && mousePosition.y < (bBox.y + bBox.height)) || card.toggleDetails();
+                            }, 500);
+                        }
                     }
                 }
             });
@@ -396,16 +409,19 @@ New Hyde Park, NY 11040`,
                     };
                 },
                 mounted() {
-                    this.main = document.querySelector('main');
-                    this.main.className = this.database;
-                    animation.initialize(document.querySelector('header form input'));
+                    this.$el.className = this.database;
+                    omniboxAnimation.initialize(document.querySelector('header form input'));
+                    this.$el.addEventListener('mousemove', e => {
+                        mousePosition.x = e.clientX;
+                        mousePosition.y = e.clientY;
+                    })
                 },
                 methods: {
                     toggleContext() {
                         const current = this.database;
                         this.database = Object.keys(this.datasets).filter(name => name != current).pop();
                         document.querySelectorAll('header nav h2 i').forEach(node => node.classList.toggle('inactive'));
-                        this.main.className = this.database;
+                        this.$el.className = this.database;
                     }
                 }
             });
@@ -419,8 +435,8 @@ New Hyde Park, NY 11040`,
             <section>
                 <h1>Phynder</h1>
                 <nav>
-                    <h2 v-on:click="toggleContext"><i class="inactive fa fa-hospital" aria-hidden="true"></i> <i
-                            class="fa fa-user" aria-hidden="true"></i></h2>
+                    <h2 v-on:click="toggleContext"><i class="inactive fa fa-hospital" aria-hidden="true"></i> <i class="fa fa-user"
+                            aria-hidden="true"></i></h2>
                     <form action="#">
                         <input type="text">
                         <button><i class="fas fa-search"></i></button>
