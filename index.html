@@ -33,11 +33,11 @@
         }
 
         main.physicians {
-            --bg-secondary: #148636;
+            --bg-secondary: #149636;
         }
 
         main.institutions {
-            --bg-secondary: blue;
+            --bg-secondary: #145196;
         }
 
         header {
@@ -74,13 +74,17 @@
             cursor: pointer;
         }
 
-        header nav h2:hover i.inactive {
+        header nav i:hover {
             color: var(--fg-secondary);
-            text-shadow: 0 0 1em white;
         }
 
         header nav i.inactive {
             color: #fff4;
+        }
+
+        header nav i.inactive:hover {
+            color: var(--fg-secondary);
+            text-shadow: 0 0 1em white;
         }
 
         header form {
@@ -129,7 +133,7 @@
             padding: .75em;
             border: 1px solid var(--bg-secondary);
         }
-
+        
         article div h1,
         article div h2,
         article div h3,
@@ -420,8 +424,8 @@ New Hyde Park, NY 11040`,
                     toggleContext() {
                         const current = this.database;
                         this.database = Object.keys(this.datasets).filter(name => name != current).pop();
-                        document.querySelectorAll('header nav h2 i').forEach(node => node.classList.toggle('inactive'));
-                        this.$el.className = this.database;
+                        // document.querySelectorAll('header nav h2 i').forEach(node => node.classList.toggle('inactive'));
+                        // this.$el.className = this.database;
                     }
                 }
             });
@@ -430,13 +434,15 @@ New Hyde Park, NY 11040`,
 </head>
 
 <body>
-    <main>
+    <main v-bind:class="database">
         <header>
             <section>
                 <h1>Phynder</h1>
                 <nav>
-                    <h2 v-on:click="toggleContext"><i class="inactive fa fa-hospital" aria-hidden="true"></i> <i class="fa fa-user"
-                            aria-hidden="true"></i></h2>
+                    <h2 v-on:click="toggleContext">
+                        <i class="fa fa-hospital" v-bind:class="{inactive: (database != 'institutions')}" aria-hidden="true"></i> 
+                        <i class="fa fa-user" v-bind:class="{inactive: (database != 'physicians')}" aria-hidden="true"></i>
+                    </h2>
                     <form action="#">
                         <input type="text">
                         <button><i class="fas fa-search"></i></button>
