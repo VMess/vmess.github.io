@@ -125,7 +125,7 @@
             font-size: 80%;
         }
 
-        article div {
+        article section>div {
             margin: .5% 0;
             position: relative;
             box-sizing: border-box;
@@ -133,55 +133,9 @@
             padding: .75em;
             border: 1px solid var(--bg-secondary);
         }
-        
-        article div h1,
-        article div h2,
-        article div h3,
-        article div h4,
-        article div h5 {
+
+        article h1 {
             margin: 0;
-            font-size: 1rem;
-        }
-
-        article div h2,
-        article div h5 {
-            font-weight: normal;
-            line-height: 1em; 
-        }
-
-        article div h2 {
-            margin-bottom: .5em;
-        }
-
-        article div h4,
-        article div h5 {
-            display: none;
-            font-size: .8rem;
-            font-weight: normal;
-           xtransition: max-height 1s;
-        }
-
-        article div.details h4,
-        article div.details h5 {
-            margin: .25em 0;
-            display: block;
-            max-height: 0;
-            opacity: 0;
-            transition:
-                max-height .2s .3s,
-                opacity .3s;
-        }
-
-        article div.expand h4,
-        article div.expand h5 {
-            max-height: 4em;
-            opacity: 1;
-            transition:
-                max-height .5s,
-                opacity .3s .2s;
-        }
-
-        article div h3 {
             position: absolute;
             right: -4px;
             bottom: -4px;
@@ -193,6 +147,41 @@
             color: var(--fg-secondary);
             text-align: center;
             line-height: 1em;
+        }
+        
+        article h2 {
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        article p {
+            margin: 0;
+            font-size: .8rem;
+        }
+
+        article section>div div.details {
+            margin-top: 0;
+            display: none;
+        }
+
+        article section>div.reveal div.details {
+            display: block;
+            max-height: 0;
+            opacity: 0;
+            transition:
+                margin-top .4s .1s ease-out,
+                max-height .4s .1s ease-out,
+                opacity .3s ease-in;
+        }
+
+        article section>div.expand div.details {
+            margin-top: 1em;
+            max-height: 6em;
+            opacity: 1;
+            transition:
+                margin-top .3s ease-in,
+                max-height .3s ease-in,
+                opacity .3s .2s ease-out;
         }
 
         footer {
@@ -366,11 +355,13 @@ New Hyde Park, NY 11040`,
                 },
                 template: `
             <div v-on:mouseenter="toggleDetails">
-                <h1>{{ physician.name }}</h1>
-                <h2>{{ physician.category }}</h2>
-                <h3>{{ physician.rank }}</h3>
-                <h4 v-for="line in breakIntoLines(physician.address)">{{ line }}</h4>
-                <h5><a href="tel:physician.phone">{{ physician.phone }}</a></h5>
+                <h2>{{ physician.name }}</h2>
+                <p>{{ physician.category }}</p>
+                <h1>{{ physician.rank }}</h1>
+                <div class="details">
+                    <p class="address" v-for="line in breakIntoLines(physician.address)">{{ line }}</p>
+                    <p class="phone"><a href="tel:physician.phone">{{ physician.phone }}</a></p>
+                </div>
             </div>
                 `,
                 methods: {
@@ -379,13 +370,15 @@ New Hyde Park, NY 11040`,
                     },
                     toggleDetails(e) {
                         const card = this;
+
                         if (card.details) {
                             card.$el.classList.remove('expand');
-                            card.$el.addEventListener('animationend', () => requestAnimationFrame(() => card.$el.classList.remove('details')), {once: true});
+                            // card.$el.querySelector('div').addEventListener('transitionend', () => {console.log('here');});
+                            card.$el.addEventListener('transitionend', () => requestAnimationFrame(() => card.$el.classList.remove('reveal')), {once: true});
                             clearInterval(card.details);
                             card.details = null;
                         } else {
-                            card.$el.classList.add('details');
+                            card.$el.classList.add('reveal');
                             requestAnimationFrame(() => requestAnimationFrame(() => card.$el.classList.add('expand')));
 
                             card.details = setInterval(() => {
